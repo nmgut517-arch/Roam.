@@ -6,6 +6,10 @@
   <title>Roam — Travel, thoughtfully designed</title>
   <meta name="description" content="Roam is a boutique travel agency crafting private, unhurried journeys to the world's quiet places." />
   <meta name="theme-color" content="#0a0a0b" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Roam — Travel, thoughtfully designed" />
+  <meta property="og:description" content="Private, unhurried journeys to the world's quiet places." />
+  <meta property="og:image" content="https://nmgut517-arch.github.io/Roam./assets/roam-logo-original.jpg" />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -52,7 +56,7 @@
       <a href="#stories"><small>04</small>Stories</a>
       <a href="#contact"><small>05</small>Plan a trip</a>
     </nav>
-    <p class="menu__foot">hello@roam.travel &nbsp;·&nbsp; +1 (555) 012-7626</p>
+    <p class="menu__foot"><a href="mailto:nmgut517@gmail.com">nmgut517@gmail.com</a></p>
   </div>
 
   <main id="top">
@@ -334,13 +338,16 @@
           <h2 class="section__title" data-split>Where to<br /><em>next?</em></h2>
           <p class="contact__lede" data-reveal>Share a few details and a Roam planner will reply within one business day. No payment, no pressure.</p>
           <ul class="contact__list" data-reveal>
-            <li><span>Email</span><a href="mailto:hello@roam.travel">hello@roam.travel</a></li>
-            <li><span>Phone</span><a href="tel:+15550127626">+1 (555) 012-7626</a></li>
+            <li><span>Email</span><a href="mailto:nmgut517@gmail.com">nmgut517@gmail.com</a></li>
+            <li><span>Reply</span>Within one business day</li>
             <li><span>Hours</span>Mon – Fri, 9am – 6pm</li>
           </ul>
         </div>
 
-        <form class="form" data-form novalidate data-reveal>
+        <form class="form" data-form novalidate data-reveal action="https://formsubmit.co/nmgut517@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New trip request from the Roam website" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="text" name="_honey" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <div class="form__row">
             <label class="field"><input name="name" required placeholder=" " autocomplete="name" /><span>Your name</span></label>
             <label class="field"><input name="email" type="email" required placeholder=" " autocomplete="email" /><span>Email</span></label>
@@ -384,15 +391,16 @@
         </div>
         <div>
           <h4>Contact</h4>
-          <a href="mailto:hello@roam.travel">hello@roam.travel</a>
-          <a href="tel:+15550127626">+1 (555) 012-7626</a>
+          <a href="mailto:nmgut517@gmail.com">nmgut517@gmail.com</a>
           <a href="#contact">Plan a trip</a>
         </div>
-        <form class="footer__news" data-news>
+        <form class="footer__news" data-news action="https://formsubmit.co/nmgut517@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New newsletter sign-up (Roam website)" />
+          <input type="text" name="_honey" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <h4>Field notes</h4>
           <p>One email a month. Places we found, nothing else.</p>
           <div class="footer__input">
-            <input type="email" placeholder="you@email.com" aria-label="Email address" required />
+            <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
             <button type="submit" aria-label="Subscribe"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
           </div>
         </form>

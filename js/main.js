@@ -458,9 +458,25 @@
   // Destination cards pre-fill the destination field
   $$("[data-dest]").forEach((a) => a.addEventListener("click", () => { destInput.value = a.dataset.dest; }));
 
-  const form = $("[data-form]"), note = $("[data-form-note]");
-  form.addEventListener("submit", (e) => {
+  // Submissions go to the inbox in each form's action (FormSubmit). The very first
+  // submission triggers a one-time activation email to that inbox.
+  const send = async (formEl) => {
+    const data = Object.fromEntries(new FormData(formEl));
+    if (data._honey) return { ok: true }; // bot filled the hidden field — pretend success
+    const res = await fetch(formEl.action.replace("formsubmit.co/", "formsubmit.co/ajax/"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(data),
+    });
+    const json = await res.json().catch(() => ({}));
+    return { ok: res.ok && String(json.success) === "true", message: json.message };
+  };
+  const inbox = (formEl) => formEl.action.split("/").pop();
+
+  const form = $("[data-form]"), note = $("[data-form-note]"), submitBtn = $("button[type=submit]", form);
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (form.classList.contains("is-sending")) return;
     let ok = true;
     ["name", "email"].forEach((n) => {
       const input = form[n], field = input.closest(".field");
@@ -468,24 +484,50 @@
       field.classList.toggle("is-invalid", !valid);
       if (!valid) ok = false;
     });
+    note.classList.remove("is-success", "is-error");
     if (!ok) {
-      note.classList.remove("is-success");
+      note.classList.add("is-error");
       note.textContent = "Please add your name and a valid email.";
       form.querySelector(".is-invalid input").focus();
       return;
     }
-    // Hook this up to your form backend (Formspree, Netlify Forms, etc.)
-    form.classList.add("is-sent");
-    note.classList.add("is-success");
-    note.textContent = `Thank you, ${form.name.value.trim().split(" ")[0]}. A Roam planner will be in touch within one business day.`;
+    const firstName = form.name.value.trim().split(" ")[0];
+    form.classList.add("is-sending");
+    submitBtn.firstChild.textContent = "Sending… ";
+    note.textContent = "";
+    try {
+      const r = await send(form);
+      if (!r.ok) throw new Error(r.message || "Request failed");
+      form.reset();
+      form.classList.add("is-sent");
+      submitBtn.firstChild.textContent = "Sent ✓ ";
+      note.classList.add("is-success");
+      note.textContent = `Thank you, ${firstName}. A Roam planner will be in touch within one business day.`;
+    } catch (err) {
+      submitBtn.firstChild.textContent = "Send to a planner ";
+      note.classList.add("is-error");
+      note.innerHTML = `Something went wrong sending your request. Please try again, or email us at <a href="mailto:${inbox(form)}">${inbox(form)}</a>.`;
+    } finally {
+      form.classList.remove("is-sending");
+    }
   });
   $$(".field input", form).forEach((i) => i.addEventListener("input", () => i.closest(".field").classList.remove("is-invalid")));
 
-  $("[data-news]").addEventListener("submit", (e) => {
+  $("[data-news]").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const input = $("input", e.target);
-    input.value = "";
-    input.placeholder = "You're on the list ✦";
+    const f = e.target, input = $("input[type=email]", f);
+    if (!input.checkValidity()) { input.reportValidity(); return; }
+    input.readOnly = true;
+    try {
+      const r = await send(f);
+      if (!r.ok) throw new Error(r.message);
+      input.value = "";
+      input.placeholder = "You're on the list ✦";
+    } catch {
+      input.placeholder = "Couldn't subscribe — try again";
+    } finally {
+      input.readOnly = false;
+    }
   });
 
   $("[data-year]").textContent = new Date().getFullYear();

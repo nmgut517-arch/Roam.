@@ -494,7 +494,10 @@ body.menu-open .menu__links a:nth-child(5) { transition-delay: 0.45s; color: var
 .chips input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
 .form__note { margin: 0; min-height: 1.4em; font-size: 14px; text-align: center; color: var(--muted); }
 .form__note.is-success { color: var(--accent); }
-.form.is-sent .btn { pointer-events: none; opacity: 0.6; }
+.form__note.is-error { color: #e2685c; }
+.form__note a { text-decoration: underline; }
+.form.is-sending .btn, .form.is-sent .btn { pointer-events: none; opacity: 0.6; }
+.menu__foot a:hover { color: var(--text); }
 
 /* ---------- Footer ---------- */
 .footer { position: relative; padding: 90px var(--gutter) 28px; border-top: 1px solid var(--line); overflow: hidden; }
